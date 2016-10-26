@@ -3,14 +3,13 @@ const app = express.Router();
 const bodyParser =  require('body-parser');
 const db = require('../models');
 const Card = db.Card;
-const User = db.User;
 
 app.use(bodyParser.urlencoded({extended : true}));
 
 
 app.get('/', function(req,res){
   Card.findAll({
-    limit: 2
+    limit: 10
   })
   .then((card)=>{
     //console .log('card', card);

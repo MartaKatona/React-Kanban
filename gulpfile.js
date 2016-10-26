@@ -25,14 +25,14 @@ gulp.task('nodemon', function (cb) {
   });
 })
 
-gulp.task('browser-sync', ['nodemon'], function() {
-  browserSync.init(null, {
-    proxy : 'http://localhost:8080',
-    files : ['public/**/*.*'],
-    browser : 'google chrome',
-    port : 7000
-  });
-});
+// gulp.task('browser-sync', ['nodemon'], function() {
+//   browserSync.init(null, {
+//     proxy : 'http://localhost:8080',
+//     files : ['public/**/*.*'],
+//     browser : 'google chrome',
+//     port : 7000
+//   });
+// });
 
 gulp.task('sass', function () {
   return gulp.src('./sass/*.scss')
