@@ -1,4 +1,6 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { receiveCards } from '../actions/kanbanCardActions';
 import KanbanCardList from './KanbanCardList';
 import styles from './KanbanPage.scss';
 
@@ -6,24 +8,24 @@ class KanbanPage extends React.Component {
   constructor(){
     super();
 
-      this.state = {
-        cardsQueue: [], // create the 3 diff state
-      }
       this.onCardsData = this.onCardsData.bind(this)
+      this.loadDataFromCards = this.loadDataFromCards.bind(this);
       this.updateCardHandler = this.updateCardHandler.bind(this);
   };
 
 
   onCardsData(cardsQueue) {
+    const { dispatch } = this.props;
     const parsedData = JSON.parse(cardsQueue.currentTarget.response);
     console.log('parsedData.card:', parsedData.card);
-    this.setState({cardsQueue: parsedData.card})
+    dispatch(receiveCards(parsedData.card));
   }
   onCardsError(error) {
     console.log('error:', error);
   }
 
   loadDataFromCards(){
+    console.log(' inside loadDataFromCards this.props.serverURL:  ', this.props.serverURL);
     const oReq =  new XMLHttpRequest ();
     oReq.addEventListener("load", this.onCardsData);
     oReq.addEventListener("error", this.onCardsError);
@@ -52,7 +54,6 @@ class KanbanPage extends React.Component {
     };
     console.log('newStatus: ', newStatus);
     let encodeBody = `title=${encodeURIComponent(card.title)}&priority=${encodeURIComponent(card.priority)}&status=${newStatus}&createdby=${encodeURIComponent(card.createdby)}&assignedto=${encodeURIComponent(card.assignedto)}&creatorID=${card.creatorID}&assignedID=${card.assignedID}`;
-    let cardBody = "title=NEW%20PUT%20test%20new%20title&priority=High&status=Queue&createdby=Marge&assignedto=Lisa&creatorID=4&assignedID=3";
     console.log('encodeBody:  ', encodeBody);
     return encodeBody;
   }
@@ -80,15 +81,15 @@ class KanbanPage extends React.Component {
   render() {
     return (
       <div id={styles.KPage} className={styles.KanbanPage}>
-        <KanbanCardList cardsQueue = {this.state.cardsQueue.filter((card)=>{
+        <KanbanCardList cardsQueue = {this.props.cardsQueue.filter((card)=>{
           return card.status === 'Queue';
         })} updateCardHandler = {this.updateCardHandler} />
-        <KanbanCardList cardsQueue = {this.state.cardsQueue.filter((card)=>{
+        <KanbanCardList cardsQueue = {this.props.cardsQueue.filter((card)=>{
           return card.status === 'InProgress';
-        })} />
-        <KanbanCardList cardsQueue = {this.state.cardsQueue.filter((card)=>{
+        })} updateCardHandler = {this.updateCardHandler} />
+        <KanbanCardList cardsQueue = {this.props.cardsQueue.filter((card)=>{
           return card.status === 'Done';
-        })} />
+        })} updateCardHandler = {this.updateCardHandler}/>
       </div>
     )
   }
@@ -98,8 +99,13 @@ KanbanPage.defaultProps = {
   cardsQueue: React.PropTypes.array,
 }
 
-KanbanPage.defaultProps = {
-  cardsQueue: [],
+const mapStateToPrps = (state, ownProps) =>{
+  const { kanbanCardReducer } = state;
+  return {
+    cardsQueue: kanbanCardReducer.toJS()
+  }
 }
 
-export default KanbanPage;
+export default connect(
+  mapStateToPrps
+)(KanbanPage)

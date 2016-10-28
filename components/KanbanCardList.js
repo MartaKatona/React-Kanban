@@ -5,9 +5,7 @@ import styles from './KanbanCardList.scss';
 class KanbanCardList extends React.Component {
 
   render (){
-    console.log('this.props.updateCardHandler', this.props.updateCardHandler);
-    const KanbanCardListNode = this.props.cardsQueue.map((dataItem) =>{
-      console.log('dataItem', dataItem);
+    const KanbanCardListNode = this.props.cardsQueue.map((dataItem, index) =>{
       return (
         <CardItem
           key = {dataItem.id}
@@ -20,6 +18,7 @@ class KanbanCardList extends React.Component {
           creatorID = {dataItem.creatorID}
           assignedID = {dataItem.assignedID}
           updateCardHandler = {this.props.updateCardHandler}
+          index = {index}
         />
       )
     })

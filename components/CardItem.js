@@ -1,17 +1,32 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { deleteCard, moveCard } from '../actions/kanbanCardActions';
 import styles from './CardItem.scss';
 
 
 class CardItem extends React.Component {
   constructor () {
     super();
-      this.statusUp = this.statusUp.bind(this);
+      this.moveUp = this.moveUp.bind(this);
+      this.moveDown = this.moveDown.bind(this);
+      this.deleteACard = this.deleteACard.bind(this);
   }
 
-statusUp(newStatus) {
+moveUp(newStatus) {
   const move = 'up';
+  cardItemData: this.props.updateCardHandler(move, this.props);
+}
+moveDown(newStatus) {
+  const move = 'down';
   console.log('This is the props on Card clicked', this.props);
-  cardItemData: this.props.updateCardHandler(move,this.props)
+  cardItemData: this.props.updateCardHandler(move, this.props);
+}
+deleteACard (){
+    console.log('inside deleteACard - index', this.props.index);
+    console.log('inside deleteACard - card', this.props);
+    const { dispatch, index } = this.props;
+    dispatch(deleteCard(index));
+    return;
 }
 
 
@@ -24,10 +39,21 @@ statusUp(newStatus) {
         <h4>{this.props.status}</h4>
         <h4>{this.props.createdby}</h4>
         <h4>{this.props.assignedto}</h4>
-        <button onClick={this.statusUp}>statusUp</button>
+        <button onClick={this.moveUp}>moveUp</button>
+        <button onClick={this.moveDown}>moveDown</button>
+        <button onClick={this.deleteACard}>Delete</button>
       </div>
     )
   }
 }
 
-export default CardItem;
+const mapStateToPrps = (state, ownProps) =>{
+  const { kanbanCardReducer } = state;
+  return {
+    cardsQueue: kanbanCardReducer.toJS()
+  }
+}
+
+export default connect(
+  mapStateToPrps
+)(CardItem)
