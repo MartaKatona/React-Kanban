@@ -1,9 +1,13 @@
 $pink: pink;
 
-.KanbanPage {
-  background-color: pink;
-}
+// .KanbanPage {
+//   background-color: pink;
+// }
 
 #KPage {
-  width:900px;
+  display: flex;
+  flex-flow: row nowrap;
+  // vertical-align: flex-start;
+  width:100%;
+  border: 2px solid black;
 }

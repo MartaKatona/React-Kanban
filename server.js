@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const cards = require('./routes/cards.js');
+const route = require('./routes/cards.js');
 const CONFIG = require('./config/config.json');
 const db = require('./models');
 const User = db.User;
@@ -16,7 +16,7 @@ const isDeveloping = process.env.NODE_ENV !== 'production';
 const port = isDeveloping ? 8080 : process.env.PORT;
 
 app.use(express.static('./public'));
-app.use('/cards', cards);
+app.use('/api', route);
 
 if (isDeveloping) {
   app.set('host', 'http://localhost');
@@ -49,10 +49,6 @@ app.use(middleware);
   });
 }
 //eof Joes
-
-
-
-
 
 
 app.listen(8080, function() {

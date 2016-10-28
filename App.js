@@ -6,7 +6,7 @@ class App extends React.Component {
     return (
       <div>
         <h2>Hello from App</h2>
-        <KanbanPage serverURL='http://localhost:8080/cards'
+        <KanbanPage serverURL='http://localhost:8080/api'
         />
       </div>
     )

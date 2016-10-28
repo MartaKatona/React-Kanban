@@ -7,49 +7,99 @@ class KanbanPage extends React.Component {
     super();
 
       this.state = {
-        data: [],
+        cardsQueue: [], // create the 3 diff state
       }
-      this.onRedditData = this.onRedditData.bind(this)
+      this.onCardsData = this.onCardsData.bind(this)
+      this.updateCardHandler = this.updateCardHandler.bind(this);
   };
 
 
-  onRedditData(data) {
-    const parsedData = JSON.parse(data.currentTarget.response);
-    console.log('parsedData.card data:', parsedData.card);
-    this.setState({data: parsedData.card})
+  onCardsData(cardsQueue) {
+    const parsedData = JSON.parse(cardsQueue.currentTarget.response);
+    console.log('parsedData.card:', parsedData.card);
+    this.setState({cardsQueue: parsedData.card})
   }
-  onRedditError(error) {
+  onCardsError(error) {
     console.log('error:', error);
   }
 
-  loadDataFromReddit(){
+  loadDataFromCards(){
     const oReq =  new XMLHttpRequest ();
-    oReq.addEventListener("load", this.onRedditData);
-    oReq.addEventListener("error", this.onRedditError);
+    oReq.addEventListener("load", this.onCardsData);
+    oReq.addEventListener("error", this.onCardsError);
     oReq.open('GET', this.props.serverURL);
     oReq.send()
   }
 
+  bodyMaker(move, card){
+    let newStatus = '';
+    switch (card.status) {
+      case 'Queue':
+        if (move === 'up') {
+          newStatus = 'InProgress';
+        } else { newStatus = 'Queue'}
+      break;
+      case 'InProgress':
+        if (move === 'up') {
+          newStatus = 'Done';
+        } else { newStatus = 'Queue'}
+      break;
+      case 'Done':
+        if (move === 'up') {
+          newStatus = 'Done';
+        } else { newStatus = 'InProgress'}
+      break;
+    };
+    console.log('newStatus: ', newStatus);
+    let encodeBody = `title=${encodeURIComponent(card.title)}&priority=${encodeURIComponent(card.priority)}&status=${newStatus}&createdby=${encodeURIComponent(card.createdby)}&assignedto=${encodeURIComponent(card.assignedto)}&creatorID=${card.creatorID}&assignedID=${card.assignedID}`;
+    let cardBody = "title=NEW%20PUT%20test%20new%20title&priority=High&status=Queue&createdby=Marge&assignedto=Lisa&creatorID=4&assignedID=3";
+    console.log('encodeBody:  ', encodeBody);
+    return encodeBody;
+  }
+
+  updateCardHandler(move,cardItemData) {
+    console.log('cardItemData: ', cardItemData);
+    console.log('move: ', move);
+    let card = this.bodyMaker(move, cardItemData);
+    console.log('card to send:  ', card);
+    let Url = `${this.props.serverURL}/${cardItemData.id}/edit`;
+    console.log('Url to send: ', Url);
+    const oReq =  new XMLHttpRequest ();
+    oReq.addEventListener("load", this.loadDataFromCards);
+    oReq.addEventListener("error", this.onCardsError);
+    oReq.open('PUT', Url);
+    oReq.setRequestHeader("content-type", "application/x-www-form-urlencoded");
+    oReq.setRequestHeader("cache-control", "no-cache");
+    oReq.send(card)
+  }
+
   componentWillMount() {
-    this.loadDataFromReddit();
+    this.loadDataFromCards();
   }
 
   render() {
     return (
       <div id={styles.KPage} className={styles.KanbanPage}>
-        <h1>Kanban Cards Page</h1>
-        <KanbanCardList data = {this.state.data}/>
+        <KanbanCardList cardsQueue = {this.state.cardsQueue.filter((card)=>{
+          return card.status === 'Queue';
+        })} updateCardHandler = {this.updateCardHandler} />
+        <KanbanCardList cardsQueue = {this.state.cardsQueue.filter((card)=>{
+          return card.status === 'InProgress';
+        })} />
+        <KanbanCardList cardsQueue = {this.state.cardsQueue.filter((card)=>{
+          return card.status === 'Done';
+        })} />
       </div>
     )
   }
 }
 
 KanbanPage.defaultProps = {
-  data: React.PropTypes.array,
+  cardsQueue: React.PropTypes.array,
 }
 
 KanbanPage.defaultProps = {
-  data: [],
+  cardsQueue: [],
 }
 
 export default KanbanPage;
