@@ -22,11 +22,9 @@ class KanbanCardList extends React.Component {
         />
       )
     })
-
-    //console.log('this.props', this.props)
     return (
       <div className={styles.KCardList}>
-        <h2>Card List</h2>
+        <h2>{this.props.columnName}</h2>
         {KanbanCardListNode}
       </div>
     )

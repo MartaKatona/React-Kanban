@@ -8,7 +8,7 @@ class KanbanPage extends React.Component {
   constructor(){
     super();
 
-      this.onCardsData = this.onCardsData.bind(this)
+      this.onCardsData = this.onCardsData.bind(this);
       this.loadDataFromCards = this.loadDataFromCards.bind(this);
       this.updateCardHandler = this.updateCardHandler.bind(this);
   };
@@ -29,7 +29,7 @@ class KanbanPage extends React.Component {
     const oReq =  new XMLHttpRequest ();
     oReq.addEventListener("load", this.onCardsData);
     oReq.addEventListener("error", this.onCardsError);
-    oReq.open('GET', this.props.serverURL);
+    oReq.open('GET', 'http://localhost:8080/api');
     oReq.send()
   }
 
@@ -63,7 +63,7 @@ class KanbanPage extends React.Component {
     console.log('move: ', move);
     let card = this.bodyMaker(move, cardItemData);
     console.log('card to send:  ', card);
-    let Url = `${this.props.serverURL}/${cardItemData.id}/edit`;
+    let Url = `http://localhost:8080/api/${cardItemData.id}/edit`;
     console.log('Url to send: ', Url);
     const oReq =  new XMLHttpRequest ();
     oReq.addEventListener("load", this.loadDataFromCards);
@@ -79,17 +79,18 @@ class KanbanPage extends React.Component {
   }
 
   render() {
+    let columnName = '';
     return (
       <div id={styles.KPage} className={styles.KanbanPage}>
         <KanbanCardList cardsQueue = {this.props.cardsQueue.filter((card)=>{
           return card.status === 'Queue';
-        })} updateCardHandler = {this.updateCardHandler} />
+        })} updateCardHandler = {this.updateCardHandler} columnName='TO DO' />
         <KanbanCardList cardsQueue = {this.props.cardsQueue.filter((card)=>{
           return card.status === 'InProgress';
-        })} updateCardHandler = {this.updateCardHandler} />
+        })} updateCardHandler = {this.updateCardHandler} columnName='DOING' />
         <KanbanCardList cardsQueue = {this.props.cardsQueue.filter((card)=>{
           return card.status === 'Done';
-        })} updateCardHandler = {this.updateCardHandler}/>
+        })} updateCardHandler = {this.updateCardHandler} columnName='DONE' />
       </div>
     )
   }
@@ -99,13 +100,14 @@ KanbanPage.defaultProps = {
   cardsQueue: React.PropTypes.array,
 }
 
-const mapStateToPrps = (state, ownProps) =>{
+const mapStateToProps = (state, ownProps) =>{
   const { kanbanCardReducer } = state;
+  console.log('cardsQueue', kanbanCardReducer.get('cards').toJS());
   return {
-    cardsQueue: kanbanCardReducer.toJS()
+    cardsQueue: kanbanCardReducer.get('cards').toJS()
   }
 }
 
 export default connect(
-  mapStateToPrps
+  mapStateToProps
 )(KanbanPage)
