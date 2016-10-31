@@ -9,19 +9,20 @@ class NewCard extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.state = {
-      id: '',
-      title: '',
-      priority: '',
-      createdby: '',
-      assignedto: '',
-      creatorID: '',
-      assignedID: ''
-    };
-  };
+        id: '',
+        title: '',
+        priority: '',
+        createdby: '',
+        assignedto: '',
+        creatorID: '',
+        assignedID: ''
+    }; // state
+  }
 
   handleChange(event) {
-    console.log('inside handleChange event.target.value', event.target.name);
-    console.log('inside handleChange this.props', this.props);
+    console.log('inside handleChange event.target.value', event.target);
+    // this.setState({card: event.target.value});
+    // console.log('inside handleChange this.props', this.props);
     const { name, value } = event.target;
     this.setState({
       [name] : value
@@ -34,7 +35,31 @@ class NewCard extends React.Component {
     console.log('inside handleSUBMIT - this.props', this.props);
     console.log('inside handleSUBMIT - click on button', this.state);
     dispatch(addCard(this.state));
+
+
   }
+
+//   onUsersData(users) {
+//     const parsedData = JSON.parse(users.currentTarget.response);
+//     console.log('parsedData.users:', parsedData.users);
+//     let usersArr = parsedData.users;
+//     console.log('usersArr: ', usersArr);
+//   }
+//   onUsersError(error) {
+//     console.log('users error:', error);
+//   }
+
+//   loadDataFromUser(){
+//     console.log('inside load User ')
+//     const oReq =  new XMLHttpRequest ();
+//     oReq.addEventListener("load", this.onUsersData);
+//     oReq.addEventListener("error", this.onUsersError);
+//     oReq.open('GET', 'http://localhost:8080/api/users');
+//     oReq.send()
+//   }
+
+// const usersData = loadDataFromUser();
+//     console.log('usersData: ', usersData);
 
   render() {
     return (
@@ -57,14 +82,14 @@ class NewCard extends React.Component {
         <label>Created By(First Name):</label>
           <input type="text"
           name="createdby"
-          placeholder="first name"
+          placeholder="username"
           value={this.state.createdby}
           onChange={this.handleChange} />
 
         <label>Assigned To(First Name):</label>
           <input type="text"
           name="assignedto"
-          placeholder="first name"
+          placeholder="username"
           value={this.state.assignedto}
           onChange={this.handleChange} />
 
@@ -82,9 +107,9 @@ NewCard.defaultProps = {
 
 const mapStateToProps = (state, ownProps) =>{
   const { kanbanCardReducer } = state;
-  console.log('cardsQueue', kanbanCardReducer.get('cards').toJS());
+  console.log('cardsQueue', kanbanCardReducer.get('newcard').toJS());
   return {
-    addedCard: kanbanCardReducer.get('cards').toJS()
+    addedCard: kanbanCardReducer.get('newcard').toJS()
   }
 }
 

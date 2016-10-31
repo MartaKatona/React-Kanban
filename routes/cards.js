@@ -3,13 +3,42 @@ const app = express.Router();
 const bodyParser =  require('body-parser');
 const db = require('../models');
 const Card = db.Card;
+const User = db.User;
 
 app.use(bodyParser.urlencoded({extended : true}));
 
+function getUserIdByUsername(name){
+  let id = 0;
+  let userFound = {};
+  userFound  = User.findAll(
+    {
+      limit: 2
+    }
+  );
+  console.log('userFound', userFound);
+  id = parseInt(userFound.id);
+  return id;
+  // .then((user) =>{
+  //   console.log('userCreated', userCreated);
+  //   let creatorID = user.id;
+  // })
+  // .then((id) =>{
+  //   Card.create(
+  //    {
+  //       title: req.body.title,
+  //       priority: req.body.priority,
+  //       status: req.body.status,
+  //       createdby: req.body.createdby,
+  //       assignedto: req.body.assignedto,
+  //       creatorID: req.body.creatorID,
+  //       assignedID: req.body.assignedID
+  //   });
+  // })
+}
 
 app.get('/', function(req,res){
   Card.findAll({
-    limit: 10
+    limit: 20
   })
   .then((card)=>{
     //console .log('card', card);
@@ -39,7 +68,10 @@ app.get('/new', (req, res)=> {
     }
 });
 app.post('/new', (req, res) => {
-  console.log('req.body', req.body);
+  console.log('req.body.createdby', req.body.createdby);
+  let creator = 1; //getUserIdByUsername(req.body.createdby);
+  let assigned = 2; //getUserIdByUsername(req.body.assignedto);
+  console.log('creator:  ', creator);
   Card.create(
    {
     title: req.body.title,
@@ -47,8 +79,8 @@ app.post('/new', (req, res) => {
     status: req.body.status,
     createdby: req.body.createdby,
     assignedto: req.body.assignedto,
-    creatorID: req.body.creatorID,
-    assignedID: req.body.assignedID
+    creatorID: creator,
+    assignedID: assigned
    })
   .then((card) => {
     res.json({
@@ -78,8 +110,8 @@ app.put('/:id/edit', (req,res) =>{
     assignedto: req.body.assignedto,
     creatorID: req.body.creatorID,
     assignedID: req.body.assignedID
-  },
-    {where: { id: req.params.id}
+  },{
+    where: { id: req.params.id}
   }
   )
   .then((card) =>{

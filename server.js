@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const route = require('./routes/cards.js');
+const users = require('./routes/users.js');
 const CONFIG = require('./config/config.json');
 const db = require('./models');
 const User = db.User;
@@ -17,6 +18,8 @@ const port = isDeveloping ? 8080 : process.env.PORT;
 
 app.use(express.static('./public'));
 app.use('/api', route);
+app.use('/api/users', users);
+
 
 if (isDeveloping) {
   app.set('host', 'http://localhost');
