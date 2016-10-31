@@ -12,17 +12,45 @@ class NewCard extends React.Component {
         id: '',
         title: '',
         priority: '',
+        status: "Queue",
         createdby: '',
         assignedto: '',
-        creatorID: '',
-        assignedID: ''
+        creatorID: 1,
+        assignedID: 2
     }; // state
+  }
+
+bodyMaker(move, card){
+    let newStatus = '';
+    switch (card.status) {
+      case 'Queue':
+        if (move === 'up') {
+          newStatus = 'InProgress';
+        } else { newStatus = 'Queue'}
+      break;
+      case 'InProgress':
+        if (move === 'up') {
+          newStatus = 'Done';
+        } else { newStatus = 'Queue'}
+      break;
+      case 'Done':
+        if (move === 'up') {
+          newStatus = 'Done';
+        } else { newStatus = 'InProgress'}
+      break;
+      default:
+       newStatus = 'Queue';
+    };
+    console.log('newStatus: ', newStatus);
+    let encodeBody = `title=${encodeURIComponent(card.title)}&priority=${encodeURIComponent(card.priority)}&status=${newStatus}&createdby=${encodeURIComponent(card.createdby)}&assignedto=${encodeURIComponent(card.assignedto)}&creatorID=${card.creatorID}&assignedID=${card.assignedID}`;
+    console.log('encodeBody:  ', encodeBody);
+    return encodeBody;
   }
 
   handleChange(event) {
     console.log('inside handleChange event.target.value', event.target);
     // this.setState({card: event.target.value});
-    // console.log('inside handleChange this.props', this.props);
+    //console.log('inside handleChange this.props', this.props);
     const { name, value } = event.target;
     this.setState({
       [name] : value
@@ -32,10 +60,19 @@ class NewCard extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
     const { dispatch } = this.props;
-    console.log('inside handleSUBMIT - this.props', this.props);
+    //console.log('inside handleSUBMIT - this.props', this.props);
     console.log('inside handleSUBMIT - click on button', this.state);
     dispatch(addCard(this.state));
 
+    let card = this.bodyMaker('no',this.state);
+    let Url = `http://localhost:8080/api/new`;
+    const oReq =  new XMLHttpRequest ();
+    // oReq.addEventListener("load", this.loadDataFromCards);
+    oReq.addEventListener("error", this.onCardsError);
+    oReq.open('POST', Url);
+    oReq.setRequestHeader("content-type", "application/x-www-form-urlencoded");
+    oReq.setRequestHeader("cache-control", "no-cache");
+    oReq.send(card)
 
   }
 
@@ -102,14 +139,14 @@ class NewCard extends React.Component {
 }
 
 NewCard.defaultProps = {
-  addedCard: React.PropTypes.array,
+  newcard: React.PropTypes.array,
 }
 
 const mapStateToProps = (state, ownProps) =>{
   const { kanbanCardReducer } = state;
-  console.log('cardsQueue', kanbanCardReducer.get('newcard').toJS());
+  console.log('newcard', kanbanCardReducer.get('newcard').toJS());
   return {
-    addedCard: kanbanCardReducer.get('newcard').toJS()
+    newcard: kanbanCardReducer.get('newcard').toJS()
   }
 }
 

@@ -7,6 +7,7 @@ const initialState = Map({
     id: '',
     title: '',
     priority: '',
+    status: '',
     createdby: '',
     assignedto: '',
     creatorID: '',
