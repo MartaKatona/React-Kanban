@@ -1,8 +1,16 @@
 export const RECEIVE_CARDS = 'RECEIVE_CARDS';
+export const RECEIVE_USERS = 'RECEIVE_USERS';
 export const DELETE_CARD = 'DELETE_CARD';
 export const MOVE_CARD = 'MOVE_CARD';
 export const ADD_CARD = 'ADD_CARD';
 
+
+export const receiveUsers = (users) =>{
+  return {
+    type: RECEIVE_USERS,
+    users
+  }
+}
 
 export const receiveCards = (card) =>{
   return {

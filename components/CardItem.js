@@ -26,6 +26,18 @@ deleteACard (){
     console.log('inside deleteACard - card', this.props);
     const { dispatch, index } = this.props;
     dispatch(deleteCard(index));
+
+    let card = `id=${this.props.id}`;
+    //console.log('card to send:  ', card, this.props);
+    let Url = `http://localhost:8080/api/${this.props.id}/delete`;
+    const oReq =  new XMLHttpRequest ();
+    //oReq.addEventListener("load", this.loadDataFromCards);
+    oReq.addEventListener("error", this.onCardsError);
+    oReq.open('DELETE', Url);
+    oReq.setRequestHeader("content-type", "application/x-www-form-urlencoded");
+    oReq.setRequestHeader("cache-control", "no-cache");
+    oReq.send(card);
+
     return;
 }
 

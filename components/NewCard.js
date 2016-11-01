@@ -1,13 +1,16 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { addCard } from '../actions/kanbanCardActions'
+import { receiveUsers } from '../actions/kanbanCardActions';
+
 
 class NewCard extends React.Component {
   constructor(){
     super();
-
+    this.onUsersData = this.onUsersData.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+
     this.state = {
         id: '',
         title: '',
@@ -17,8 +20,32 @@ class NewCard extends React.Component {
         assignedto: '',
         creatorID: 1,
         assignedID: 2
-    }; // state
+    };
   }
+
+onUsersData(users) {
+    console.log('onUsersData  this.props', this.props);
+    const { dispatch } = this.props;
+    const parsedData = JSON.parse(users.currentTarget.response);
+    console.log('parsedData.users:', parsedData.users);
+    dispatch(receiveUsers(parsedData.users));
+  }
+  onUsersError(error) {
+    console.log('users error:', error);
+  }
+
+  loadDataFromUsers(){
+    console.log('inside load User ');
+    const oReq =  new XMLHttpRequest ();
+    oReq.addEventListener("load", this.onUsersData);
+    oReq.addEventListener("error", this.onUsersError);
+    oReq.open('GET', 'http://localhost:8080/api/users');
+    oReq.send();
+  }
+
+componentWillMount() {
+    this.loadDataFromUsers();
+}
 
 bodyMaker(move, card){
     let newStatus = '';
@@ -67,38 +94,22 @@ bodyMaker(move, card){
     let card = this.bodyMaker('no',this.state);
     let Url = `http://localhost:8080/api/new`;
     const oReq =  new XMLHttpRequest ();
-    // oReq.addEventListener("load", this.loadDataFromCards);
+    oReq.addEventListener("load", this.loadDataFromCards);
     oReq.addEventListener("error", this.onCardsError);
     oReq.open('POST', Url);
     oReq.setRequestHeader("content-type", "application/x-www-form-urlencoded");
     oReq.setRequestHeader("cache-control", "no-cache");
-    oReq.send(card)
+    oReq.send(card);
 
+    this.props.showForm();
   }
 
-//   onUsersData(users) {
-//     const parsedData = JSON.parse(users.currentTarget.response);
-//     console.log('parsedData.users:', parsedData.users);
-//     let usersArr = parsedData.users;
-//     console.log('usersArr: ', usersArr);
-//   }
-//   onUsersError(error) {
-//     console.log('users error:', error);
-//   }
-
-//   loadDataFromUser(){
-//     console.log('inside load User ')
-//     const oReq =  new XMLHttpRequest ();
-//     oReq.addEventListener("load", this.onUsersData);
-//     oReq.addEventListener("error", this.onUsersError);
-//     oReq.open('GET', 'http://localhost:8080/api/users');
-//     oReq.send()
-//   }
-
-// const usersData = loadDataFromUser();
-//     console.log('usersData: ', usersData);
-
   render() {
+    if (this.props.users.length) {
+      let usersArr = this.props.users[0].username;
+      console.log('usersArr adat: ', usersArr);
+    }
+
     return (
       <form id='cardForm' onSubmit={this.handleSubmit}>
         <label>Card Title:</label>
@@ -139,14 +150,17 @@ bodyMaker(move, card){
 }
 
 NewCard.defaultProps = {
-  newcard: React.PropTypes.array,
+  users: React.PropTypes.array,
+  newcard: React.PropTypes.array
+
 }
 
 const mapStateToProps = (state, ownProps) =>{
   const { kanbanCardReducer } = state;
-  console.log('newcard', kanbanCardReducer.get('newcard').toJS());
+  // console.log('newcard', kanbanCardReducer.get('newcard').toJS());
   return {
-    newcard: kanbanCardReducer.get('newcard').toJS()
+    users: kanbanCardReducer.get('users').toJS(),
+    //newcard: kanbanCardReducer.get('newcard').toJS()
   }
 }
 
@@ -154,4 +168,3 @@ export default connect(
   mapStateToProps
 )(NewCard)
 
-//, { addCard }

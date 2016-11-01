@@ -2,17 +2,26 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { receiveCards } from '../actions/kanbanCardActions';
 import KanbanCardList from './KanbanCardList';
+import NewCard from './NewCard';
 import styles from './KanbanPage.scss';
 
 class KanbanPage extends React.Component {
   constructor(){
     super();
 
-      this.onCardsData = this.onCardsData.bind(this);
-      this.loadDataFromCards = this.loadDataFromCards.bind(this);
-      this.updateCardHandler = this.updateCardHandler.bind(this);
+    this.showForm = this.showForm.bind(this);
+    this.onCardsData = this.onCardsData.bind(this);
+    this.loadDataFromCards = this.loadDataFromCards.bind(this);
+    this.updateCardHandler = this.updateCardHandler.bind(this);
+    this.state = {
+      showNewCardForm: false,
+      users: []
+    };
   };
 
+  showForm () {
+    this.setState({showNewCardForm: !this.state.showNewCardForm})
+  }
 
   onCardsData(cardsQueue) {
     const { dispatch } = this.props;
@@ -78,23 +87,36 @@ class KanbanPage extends React.Component {
     this.loadDataFromCards();
   }
 
+  componentWillReceiveProps(nextProps){
+    console.log('nextProps.cardsQueue.length:  ', nextProps.cardsQueue.length);
+    console.log('this.props.cardsQueue.length  :', this.props.cardsQueue.length);
+    if (nextProps.cardsQueue.length !== this.props.cardsQueue.length){
+      this.loadDataFromCards();
+    }
+  }
+
   render() {
     let columnName = '';
     return (
-      <div id={styles.KPage} className={styles.KanbanPage}>
-        <KanbanCardList cardsQueue = {this.props.cardsQueue.filter((card)=>{
-          return card.status === 'Queue';
-        })} updateCardHandler = {this.updateCardHandler} columnName='TO DO' />
-        <KanbanCardList cardsQueue = {this.props.cardsQueue.filter((card)=>{
-          return card.status === 'InProgress';
-        })} updateCardHandler = {this.updateCardHandler} columnName='DOING' />
-        <KanbanCardList cardsQueue = {this.props.cardsQueue.filter((card)=>{
-          return card.status === 'Done';
-        })} updateCardHandler = {this.updateCardHandler} columnName='DONE' />
+
+      <div>
+        <button type='button' onClick={this.showForm}>Add newCard</button>
+        {this.state.showNewCardForm && <NewCard showForm={this.showForm} />}
+        <div id={styles.KPage} className={styles.KanbanPage}>
+          <KanbanCardList cardsQueue = {this.props.cardsQueue.filter((card)=>{
+            return card.status === 'Queue';
+          })} updateCardHandler = {this.updateCardHandler} columnName='TO DO' />
+          <KanbanCardList cardsQueue = {this.props.cardsQueue.filter((card)=>{
+            return card.status === 'InProgress';
+          })} updateCardHandler = {this.updateCardHandler} columnName='DOING' />
+          <KanbanCardList cardsQueue = {this.props.cardsQueue.filter((card)=>{
+            return card.status === 'Done';
+          })} updateCardHandler = {this.updateCardHandler} columnName='DONE' />
+        </div>
       </div>
     )
-  }
-}
+  } //eof render
+} // eof component
 
 KanbanPage.defaultProps = {
   cardsQueue: React.PropTypes.array,
