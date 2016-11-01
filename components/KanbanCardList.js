@@ -18,6 +18,7 @@ class KanbanCardList extends React.Component {
           creatorID = {dataItem.creatorID}
           assignedID = {dataItem.assignedID}
           updateCardHandler = {this.props.updateCardHandler}
+          loadDataFromCards = {this.props.loadDataFromCards}
           index = {index}
         />
       )

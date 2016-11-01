@@ -94,7 +94,6 @@ bodyMaker(move, card){
     let card = this.bodyMaker('no',this.state);
     let Url = `http://localhost:8080/api/new`;
     const oReq =  new XMLHttpRequest ();
-    oReq.addEventListener("load", this.loadDataFromCards);
     oReq.addEventListener("error", this.onCardsError);
     oReq.open('POST', Url);
     oReq.setRequestHeader("content-type", "application/x-www-form-urlencoded");

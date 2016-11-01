@@ -26,7 +26,9 @@ const kanbanCardReducer = (state = initialState, action) =>{
       state = state.update('cards', cards => List(action.card));
       return state;
     case DELETE_CARD:
-      return state.delete(action.index);
+      state = state.set('cards', state.get('cards').delete(action.index));
+      console.log('delete card state in reducer', state.toJS());
+      return state;
     case MOVE_CARD:
       return state.delete(action.index);
     case ADD_CARD:

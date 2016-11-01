@@ -87,14 +87,6 @@ class KanbanPage extends React.Component {
     this.loadDataFromCards();
   }
 
-  componentWillReceiveProps(nextProps){
-    console.log('nextProps.cardsQueue.length:  ', nextProps.cardsQueue.length);
-    console.log('this.props.cardsQueue.length  :', this.props.cardsQueue.length);
-    if (nextProps.cardsQueue.length !== this.props.cardsQueue.length){
-      this.loadDataFromCards();
-    }
-  }
-
   render() {
     let columnName = '';
     return (
@@ -105,13 +97,19 @@ class KanbanPage extends React.Component {
         <div id={styles.KPage} className={styles.KanbanPage}>
           <KanbanCardList cardsQueue = {this.props.cardsQueue.filter((card)=>{
             return card.status === 'Queue';
-          })} updateCardHandler = {this.updateCardHandler} columnName='TO DO' />
+          })} updateCardHandler={this.updateCardHandler} loadDataFromCards={this.loadDataFromCards}
+            columnName='TO DO' showForm={this.showForm}
+          />
           <KanbanCardList cardsQueue = {this.props.cardsQueue.filter((card)=>{
             return card.status === 'InProgress';
-          })} updateCardHandler = {this.updateCardHandler} columnName='DOING' />
+          })} updateCardHandler = {this.updateCardHandler} loadDataFromCards={this.loadDataFromCards}
+            columnName='DOING' showForm={this.showForm}
+          />
           <KanbanCardList cardsQueue = {this.props.cardsQueue.filter((card)=>{
             return card.status === 'Done';
-          })} updateCardHandler = {this.updateCardHandler} columnName='DONE' />
+          })} updateCardHandler = {this.updateCardHandler} loadDataFromCards={this.loadDataFromCards}
+            columnName='DONE' showForm={this.showForm}
+          />
         </div>
       </div>
     )
