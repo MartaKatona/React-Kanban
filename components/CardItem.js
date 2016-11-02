@@ -1,13 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { deleteCard, moveCard, onEditFieldChange } from '../actions/kanbanCardActions';
+import { deleteCard, moveCard, onEditFieldChange, onShowEditForm } from '../actions/kanbanCardActions';
 import styles from './CardItem.scss';
 
 
 class CardItem extends React.Component {
   constructor () {
     super();
-      this.showForm = this.showForm.bind(this);
+      this.showEditForm = this.showEditForm.bind(this);
       this.moveUp = this.moveUp.bind(this);
       this.moveDown = this.moveDown.bind(this);
       this.deleteACard = this.deleteACard.bind(this);
@@ -15,13 +15,13 @@ class CardItem extends React.Component {
       this.handleSubmit = this.handleSubmit.bind(this);
       this.cancelChanges = this.cancelChanges.bind(this);
 
-      this.state = {
-      showEditCardForm: false
-    };
   }
 
-  showForm () {
-    this.setState({showEditCardForm: !this.state.showEditCardForm});
+  showEditForm () {
+    console.log('this.props.showToggle', this.props.showToggle.onEdit);
+    console.log('this.props.id', this.props.id);
+    const { dispatch } = this.props;
+    dispatch(onShowEditForm(this.props.id, !this.props.showToggle.onEdit));
   }
 
   moveUp(newStatus) {
@@ -44,7 +44,6 @@ class CardItem extends React.Component {
       oReq.setRequestHeader("content-type", "application/x-www-form-urlencoded");
       oReq.setRequestHeader("cache-control", "no-cache");
       oReq.send(card);
-
       return;
   }
 
@@ -70,16 +69,16 @@ class CardItem extends React.Component {
     oReq.setRequestHeader("cache-control", "no-cache");
     oReq.send(card);
 
-    this.showForm();
+    this.showEditForm();
   }
 
   cancelChanges () {
-    this.showForm();
+    this.showEditForm();
     this.props.loadDataFromCards();
   }
 
   render (){
-    if (this.state.showEditCardForm) {
+    if (this.props.showToggle.onEdit === true && this.props.id === this.props.showToggle.cardId) {
       return (
         <div>
           <form id='editCardForm'>
@@ -136,7 +135,7 @@ class CardItem extends React.Component {
         <button onClick={this.moveUp}>moveUp</button>
         <button onClick={this.moveDown}>moveDown</button>
         <button onClick={this.deleteACard}>Delete</button>
-        <button onClick={this.showForm}>Edit</button>
+        <button onClick={this.showEditForm}>Edit</button>
       </div>
     )
   }
@@ -145,6 +144,7 @@ class CardItem extends React.Component {
 const mapStateToProps = (state, ownProps) =>{
   const { kanbanCardReducer } = state;
   return {
+    showToggle: kanbanCardReducer.get('showEditCardForm')
   }
 }
 

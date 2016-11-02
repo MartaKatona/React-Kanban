@@ -1,5 +1,6 @@
 import { List, Map } from 'immutable';
-import { RECEIVE_USERS, RECEIVE_CARDS, DELETE_CARD, MOVE_CARD, ADD_CARD, EDIT_CARD } from '../actions/kanbanCardActions';
+import { RECEIVE_USERS, RECEIVE_CARDS, DELETE_CARD } from '../actions/kanbanCardActions';
+import { MOVE_CARD, ADD_CARD, EDIT_CARD, SHOW_EDIT_FORM } from '../actions/kanbanCardActions';
 
 const initialState = Map({
   cards: List(),
@@ -12,6 +13,10 @@ const initialState = Map({
     assignedto: '',
     creatorID: '',
     assignedID: ''
+  }),
+  showEditCardForm: Map({
+    cardId: '',
+    onEdit: false
   }),
   users: List()
 });
@@ -46,6 +51,12 @@ const kanbanCardReducer = (state = initialState, action) =>{
           return newCardItem;
         });
       });
+    case SHOW_EDIT_FORM:
+      const cardToEdit = {
+        cardId: action.id,
+        onEdit: action.bool
+      };
+      return state.set('showEditCardForm', cardToEdit);
   default:
     return state;
   }

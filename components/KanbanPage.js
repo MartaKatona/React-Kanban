@@ -19,6 +19,7 @@ class KanbanPage extends React.Component {
   }
 
   showForm () {
+    console.log('this.props', this.props);
     this.setState({showNewCardForm: !this.state.showNewCardForm});
   }
 
@@ -114,7 +115,8 @@ KanbanPage.defaultProps = {
 const mapStateToProps = (state, ownProps) =>{
   const { kanbanCardReducer } = state;
   return {
-    cardsQueue: kanbanCardReducer.get('cards').toJS()
+    cardsQueue: kanbanCardReducer.get('cards').toJS(),
+    // toggleEditCardForm: kanbanCardReducer.get('showEditCardForm')
   }
 }
 

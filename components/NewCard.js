@@ -106,10 +106,11 @@ class NewCard extends React.Component {
       <form id='newCardForm' onSubmit={this.handleSubmit}>
         <label>Card Title:</label>
           <input type="text"
-          name="title"
-          placeholder="title"
-          value={this.state.title}
-          onChange={this.handleChange} />
+            name="title"
+            placeholder="title"
+            value={this.state.title}
+            onChange={this.handleChange}
+          />
 
         <label>Priority:</label>
           <select name="priority" value={this.state.priority} onChange={this.handleChange}>

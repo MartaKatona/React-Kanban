@@ -4,6 +4,7 @@ export const DELETE_CARD = 'DELETE_CARD';
 export const MOVE_CARD = 'MOVE_CARD';
 export const ADD_CARD = 'ADD_CARD';
 export const EDIT_CARD = 'EDIT_CARD';
+export const SHOW_EDIT_FORM = 'SHOW_EDIT_FORM';
 
 
 export const receiveUsers = (users) =>{
@@ -21,7 +22,6 @@ export const receiveCards = (card) =>{
 }
 
 export const deleteCard = (index) =>{
-  console.log('delete card index: ', index);
   return {
     type: DELETE_CARD,
     index
@@ -29,7 +29,6 @@ export const deleteCard = (index) =>{
 }
 
 export const moveCard = (card) =>{
-  console.log('move card: ', index);
   return {
     type: MOVE_CARD,
     index
@@ -51,6 +50,15 @@ export const onEditFieldChange = (index, id, fieldName, body) =>{
     id,
     fieldName,
     body
+  }
+}
+
+export const onShowEditForm = (id, bool) =>{
+  console.log('bool: ', bool);
+  return {
+    type: SHOW_EDIT_FORM,
+    id,
+    bool
   }
 }
 
