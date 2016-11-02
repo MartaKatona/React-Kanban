@@ -35,11 +35,10 @@ class NewCard extends React.Component {
   }
 
   loadDataFromUsers(){
-    // console.log('inside load User ');
     const oReq =  new XMLHttpRequest ();
     oReq.addEventListener("load", this.onUsersData);
     oReq.addEventListener("error", this.onUsersError);
-    oReq.open('GET', 'http://localhost:8080/api/users');
+    oReq.open('GET', '/api/users');
     oReq.send();
   }
 
@@ -68,16 +67,11 @@ class NewCard extends React.Component {
       default:
        newStatus = 'Queue';
     };
-    console.log('newStatus: ', newStatus);
     let encodeBody = `title=${encodeURIComponent(card.title)}&priority=${encodeURIComponent(card.priority)}&status=${newStatus}&createdby=${encodeURIComponent(card.createdby)}&assignedto=${encodeURIComponent(card.assignedto)}&creatorID=${card.creatorID}&assignedID=${card.assignedID}`;
-    console.log('encodeBody:  ', encodeBody);
     return encodeBody;
   }
 
   handleChange(event) {
-    console.log('inside handleChange event.target.value', event.target);
-    // this.setState({card: event.target.value});
-    //console.log('inside handleChange this.props', this.props);
     const { name, value } = event.target;
     this.setState({
       [name] : value

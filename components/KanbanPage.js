@@ -14,13 +14,12 @@ class KanbanPage extends React.Component {
     this.loadDataFromCards = this.loadDataFromCards.bind(this);
     this.updateCardHandler = this.updateCardHandler.bind(this);
     this.state = {
-      showNewCardForm: false,
-      users: []
+      showNewCardForm: false
     };
-  };
+  }
 
   showForm () {
-    this.setState({showNewCardForm: !this.state.showNewCardForm})
+    this.setState({showNewCardForm: !this.state.showNewCardForm});
   }
 
   onCardsData(cardsQueue) {
@@ -33,7 +32,6 @@ class KanbanPage extends React.Component {
   }
 
   loadDataFromCards(){
-    // console.log(' inside loadDataFromCards this.props.serverURL:  ', this.props.serverURL);
     const oReq =  new XMLHttpRequest ();
     oReq.addEventListener("load", this.onCardsData);
     oReq.addEventListener("error", this.onCardsError);
@@ -65,14 +63,12 @@ class KanbanPage extends React.Component {
   }
 
   updateCardHandler(move,cardItemData) {
-    // console.log('cardItemData: ', cardItemData);
-    // console.log('move: ', move);
     let card = this.bodyMaker(move, cardItemData);
-    let Url = `http://localhost:8080/api/${cardItemData.id}/edit`;
+    let url = `/api/${cardItemData.id}/edit`;
     const oReq =  new XMLHttpRequest ();
     oReq.addEventListener("load", this.loadDataFromCards);
     oReq.addEventListener("error", this.onCardsError);
-    oReq.open('PUT', Url);
+    oReq.open('PUT', url);
     oReq.setRequestHeader("content-type", "application/x-www-form-urlencoded");
     oReq.setRequestHeader("cache-control", "no-cache");
     oReq.send(card)
@@ -108,8 +104,8 @@ class KanbanPage extends React.Component {
         </div>
       </div>
     )
-  } //eof render
-} // eof component
+  }
+}
 
 KanbanPage.defaultProps = {
   cardsQueue: React.PropTypes.array,

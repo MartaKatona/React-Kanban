@@ -16,8 +16,7 @@ class CardItem extends React.Component {
       this.cancelChanges = this.cancelChanges.bind(this);
 
       this.state = {
-      showEditCardForm: false,
-      users: []
+      showEditCardForm: false
     };
   }
 
@@ -31,22 +30,17 @@ class CardItem extends React.Component {
   }
   moveDown(newStatus) {
     const move = 'down';
-    console.log('This is the props on Card clicked', this.props);
     cardItemData: this.props.updateCardHandler(move, this.props);
   }
   deleteACard (){
-      // console.log('inside deleteACard - index', this.props.index);
-      // console.log('inside deleteACard - card', this.props);
       const { dispatch, index } = this.props;
       dispatch(deleteCard(index));
-
       let card = `id=${this.props.id}`;
-      //console.log('card to send:  ', card, this.props);
-      let Url = `http://localhost:8080/api/${this.props.id}/delete`;
+      let url = `/api/${this.props.id}/delete`;
       const oReq =  new XMLHttpRequest ();
       oReq.addEventListener("load", this.props.loadDataFromCards);
       oReq.addEventListener("error", this.onCardsError);
-      oReq.open('DELETE', Url);
+      oReq.open('DELETE', url);
       oReq.setRequestHeader("content-type", "application/x-www-form-urlencoded");
       oReq.setRequestHeader("cache-control", "no-cache");
       oReq.send(card);
@@ -56,7 +50,6 @@ class CardItem extends React.Component {
 
   bodyMaker(card){
     let encodeBody = `title=${encodeURIComponent(card.title)}&priority=${card.priority}&status=${card.status}&createdby=${encodeURIComponent(card.createdby)}&assignedto=${encodeURIComponent(card.assignedto)}&creatorID=${card.creatorID}&assignedID=${card.assignedID}`;
-    //console.log('encodeBody:  ', encodeBody);
     return encodeBody;
   }
 
@@ -68,13 +61,11 @@ class CardItem extends React.Component {
   }
 
   handleSubmit(event) {
-    console.log('onSubmit this.props', this.props);
+    //console.log('onSubmit this.props', this.props);
     let card = this.bodyMaker(this.props);
-    let Url = `http://localhost:8080/api/${this.props.id}/edit`;
+    let url = `/api/${this.props.id}/edit`;
     const oReq =  new XMLHttpRequest ();
-    //oReq.addEventListener("load", this.props.loadDataFromCards);
-    oReq.addEventListener("error", this.onCardsError);
-    oReq.open('PUT', Url);
+    oReq.open('PUT', url);
     oReq.setRequestHeader("content-type", "application/x-www-form-urlencoded");
     oReq.setRequestHeader("cache-control", "no-cache");
     oReq.send(card);
@@ -154,7 +145,6 @@ class CardItem extends React.Component {
 const mapStateToProps = (state, ownProps) =>{
   const { kanbanCardReducer } = state;
   return {
-    cardsQueue: kanbanCardReducer.toJS()
   }
 }
 
