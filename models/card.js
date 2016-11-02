@@ -23,8 +23,7 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models) {
-        // Card.belongsTo(models.User);
-        // Please refer to migration
+        // associations can be defined here
       }
     }
   });

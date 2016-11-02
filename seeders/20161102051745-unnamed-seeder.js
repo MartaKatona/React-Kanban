@@ -3,28 +3,28 @@
 module.exports = {
   up: function (queryInterface, Sequelize) {
     return queryInterface.bulkInsert('Users', [{
-      username : 'test1',
+      username : 'Homer',
       password : 'password',
       firstname: 'Homer',
       createdAt : new Date(),
       updatedAt : new Date()
     },
     {
-      username : 'test2',
+      username : 'Bart',
       password : 'password',
       firstname: 'Bart',
       createdAt : new Date(),
       updatedAt : new Date()
     },
     {
-      username : 'test3',
+      username : 'Lisa',
       password : 'password',
       firstname: 'Lisa',
       createdAt : new Date(),
       updatedAt : new Date()
     },
     {
-      username : 'test4',
+      username : 'Marge',
       password : 'password',
       firstname: 'Marge',
       createdAt : new Date(),
@@ -38,4 +38,3 @@ module.exports = {
     return queryInterface.bulkDelete('Users', null, {});
   }
 };
-
