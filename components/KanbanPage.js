@@ -26,7 +26,6 @@ class KanbanPage extends React.Component {
   onCardsData(cardsQueue) {
     const { dispatch } = this.props;
     const parsedData = JSON.parse(cardsQueue.currentTarget.response);
-    console.log('parsedData.card:', parsedData.card);
     dispatch(receiveCards(parsedData.card));
   }
   onCardsError(error) {
@@ -34,7 +33,7 @@ class KanbanPage extends React.Component {
   }
 
   loadDataFromCards(){
-    console.log(' inside loadDataFromCards this.props.serverURL:  ', this.props.serverURL);
+    // console.log(' inside loadDataFromCards this.props.serverURL:  ', this.props.serverURL);
     const oReq =  new XMLHttpRequest ();
     oReq.addEventListener("load", this.onCardsData);
     oReq.addEventListener("error", this.onCardsError);
@@ -61,19 +60,15 @@ class KanbanPage extends React.Component {
         } else { newStatus = 'InProgress'}
       break;
     };
-    console.log('newStatus: ', newStatus);
     let encodeBody = `title=${encodeURIComponent(card.title)}&priority=${encodeURIComponent(card.priority)}&status=${newStatus}&createdby=${encodeURIComponent(card.createdby)}&assignedto=${encodeURIComponent(card.assignedto)}&creatorID=${card.creatorID}&assignedID=${card.assignedID}`;
-    console.log('encodeBody:  ', encodeBody);
     return encodeBody;
   }
 
   updateCardHandler(move,cardItemData) {
-    console.log('cardItemData: ', cardItemData);
-    console.log('move: ', move);
+    // console.log('cardItemData: ', cardItemData);
+    // console.log('move: ', move);
     let card = this.bodyMaker(move, cardItemData);
-    console.log('card to send:  ', card);
     let Url = `http://localhost:8080/api/${cardItemData.id}/edit`;
-    console.log('Url to send: ', Url);
     const oReq =  new XMLHttpRequest ();
     oReq.addEventListener("load", this.loadDataFromCards);
     oReq.addEventListener("error", this.onCardsError);
@@ -122,7 +117,6 @@ KanbanPage.defaultProps = {
 
 const mapStateToProps = (state, ownProps) =>{
   const { kanbanCardReducer } = state;
-  console.log('cardsQueue', kanbanCardReducer.get('cards').toJS());
   return {
     cardsQueue: kanbanCardReducer.get('cards').toJS()
   }

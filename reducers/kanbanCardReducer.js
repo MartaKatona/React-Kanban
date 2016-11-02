@@ -1,5 +1,5 @@
 import { List, Map } from 'immutable';
-import { RECEIVE_USERS, RECEIVE_CARDS, DELETE_CARD, MOVE_CARD, ADD_CARD } from '../actions/kanbanCardActions';
+import { RECEIVE_USERS, RECEIVE_CARDS, DELETE_CARD, MOVE_CARD, ADD_CARD, EDIT_CARD } from '../actions/kanbanCardActions';
 
 const initialState = Map({
   cards: List(),
@@ -17,7 +17,6 @@ const initialState = Map({
 });
 
 const kanbanCardReducer = (state = initialState, action) =>{
-  console.log('action in reducer', action);
   switch (action.type) {
     case RECEIVE_USERS:
       state = state.update('users', users => List(action.users));
@@ -27,15 +26,26 @@ const kanbanCardReducer = (state = initialState, action) =>{
       return state;
     case DELETE_CARD:
       state = state.set('cards', state.get('cards').delete(action.index));
-      console.log('delete card state in reducer', state.toJS());
       return state;
     case MOVE_CARD:
       return state.delete(action.index);
     case ADD_CARD:
-      //state = state.set('cards', action.card);
       state = state.set('cards', state.get('cards').push(action.card));
-      console.log('newcard.card state in reducer', state.toJS());
-      return state; // update the field all the time
+      // console.log('newcard.card state in reducer', state.toJS());
+      return state;
+    case EDIT_CARD:
+      //console.log('action: ', action);
+      //console.log('typeOf id', typeof(action.id));
+      return state.updateIn(['cards'], (cards) => {
+        const indexOfCard = cards.findIndex(function (item) {
+          return item.id === action.id;
+        });
+        return cards.update(indexOfCard, (cardItem) => {
+          let newCardItem = Object.assign({}, cardItem);
+          newCardItem[action.fieldName] = action.body;
+          return newCardItem;
+        });
+      });
   default:
     return state;
   }

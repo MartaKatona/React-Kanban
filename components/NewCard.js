@@ -23,7 +23,7 @@ class NewCard extends React.Component {
     };
   }
 
-onUsersData(users) {
+  onUsersData(users) {
     console.log('onUsersData  this.props', this.props);
     const { dispatch } = this.props;
     const parsedData = JSON.parse(users.currentTarget.response);
@@ -35,7 +35,7 @@ onUsersData(users) {
   }
 
   loadDataFromUsers(){
-    console.log('inside load User ');
+    // console.log('inside load User ');
     const oReq =  new XMLHttpRequest ();
     oReq.addEventListener("load", this.onUsersData);
     oReq.addEventListener("error", this.onUsersError);
@@ -43,11 +43,11 @@ onUsersData(users) {
     oReq.send();
   }
 
-componentWillMount() {
-    this.loadDataFromUsers();
-}
+  componentWillMount() {
+      this.loadDataFromUsers();
+  }
 
-bodyMaker(move, card){
+  bodyMaker(move, card){
     let newStatus = '';
     switch (card.status) {
       case 'Queue':
@@ -106,11 +106,10 @@ bodyMaker(move, card){
   render() {
     if (this.props.users.length) {
       let usersArr = this.props.users[0].username;
-      console.log('usersArr adat: ', usersArr);
     }
 
     return (
-      <form id='cardForm' onSubmit={this.handleSubmit}>
+      <form id='newCardForm' onSubmit={this.handleSubmit}>
         <label>Card Title:</label>
           <input type="text"
           name="title"

@@ -3,6 +3,7 @@ export const RECEIVE_USERS = 'RECEIVE_USERS';
 export const DELETE_CARD = 'DELETE_CARD';
 export const MOVE_CARD = 'MOVE_CARD';
 export const ADD_CARD = 'ADD_CARD';
+export const EDIT_CARD = 'EDIT_CARD';
 
 
 export const receiveUsers = (users) =>{
@@ -36,11 +37,20 @@ export const moveCard = (card) =>{
 }
 
 export const addCard = (newcard) =>{
-  console.log('add new card in Actions: ', newcard);
   let card = newcard;
   return {
     type: ADD_CARD,
     card
+  }
+}
+
+export const onEditFieldChange = (index, id, fieldName, body) =>{
+  return {
+    type: EDIT_CARD,
+    index,
+    id,
+    fieldName,
+    body
   }
 }
 
